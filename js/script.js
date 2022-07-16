@@ -160,4 +160,26 @@
   };
 
   addClickListenersToTags();
+
+  // autorzy:
+  const optArticleAuthorSelector = '.post-author';
+
+  const generateAuthors = function () {
+    /* find all articles */
+    const articles = document.querySelectorAll(optArticleSelector);
+    /* START LOOP: for every article: */
+    for (let article of articles) {
+      /* find author wrapper */
+      const wrapper = article.querySelector(optArticleAuthorSelector);
+      /* get authors from data-author attribute */
+      const articleAuthor = article.getAttribute('data-author');
+      /* generate HTML of the link */
+      const html = `<a href="#author-${articleAuthor}">${articleAuthor}</a>`;
+      /* insert HTML into the author wrapper */
+      wrapper.innerHTML = html;
+      /* END LOOP: for every article: */
+    }
+  };
+
+  generateAuthors();
 }
