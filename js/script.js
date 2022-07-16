@@ -4,8 +4,8 @@
   const titleClickHandler = function (event) {
     event.preventDefault();
     const clickedElement = this;
-    console.log('Link was clicked!');
-    console.log(event);
+    // console.log('Link was clicked!');
+    // console.log(event);
 
     /* [DONE] remove class 'active' from all article links  */
 
@@ -17,8 +17,8 @@
 
     /* [DONE] add class 'active' to the clicked link */
     clickedElement.classList.add('active');
-    console.log('clickedElement:', clickedElement);
-    console.log('clickedElement (with plus): ' + clickedElement);
+    // console.log('clickedElement:', clickedElement);
+    // console.log('clickedElement (with plus): ' + clickedElement);
 
     /* [DONE] remove class 'active' from all articles */
 
@@ -31,57 +31,31 @@
     /* [DONE] get 'href' attribute from the clicked link */
 
     const articleSelector = clickedElement.getAttribute('href');
-    console.log(articleSelector);
+    // console.log(articleSelector);
 
     /* [DONE] find the correct article using the selector (value of 'href' attribute) */
 
     const targetArticle = document.querySelector(articleSelector);
-    console.log(targetArticle);
+    // console.log(targetArticle);
 
     /* [DONE] add class 'active' to the correct article */
 
     targetArticle.classList.add('active');
   };
 
-  // //---MY OWN SOLUTION---
-  // const generateTitleLinks = function () {
-  //   // remove content of ul located in left sidebar,
-  //   const ulContent = document.querySelector('.sidebar .titles');
-  //   ulContent.innerHTML = '';
-  //   // for each article
-  //   const articleList = document.querySelectorAll('.post');
-  //   for (let article of articleList) {
-  //     // find article's id
-  //     const articleId = article.getAttribute('id');
-  //     // find article's title
-  //     const articleTitle = article.querySelector('.post-title').innerHTML;
-  //     // create link's HTML code
-  //     const linkCode = `<li><a href="#${articleId}"><span>${articleTitle}</span></a></li>`;
-  //     // insert link to ul located in left sidebar
-  //     ulContent.innerHTML += linkCode;
-  //   }
-  //   const links = document.querySelectorAll('.titles a');
-  //   console.log(links);
-  //   for (let link of links) {
-  //     link.addEventListener('click', titleClickHandler);
-  //   }
-  // };
-
-  // generateTitleLinks();
-  // //---MY OWN SOLUTION---
-
-  //---KODILLA SOLUTION---
   const optArticleSelector = '.post',
     optTitleSelector = '.post-title',
     optTitleListSelector = '.titles',
     optArticleTagsSelector = '.post-tags .list';
 
-  const generateTitleLinks = function () {
+  const generateTitleLinks = function (customSelector = '') {
     /* remove contents of titleList */
     const titleList = document.querySelector(optTitleListSelector);
     titleList.innerHTML = '';
     /* for each article */
-    const articles = document.querySelectorAll(optArticleSelector);
+    const articles = document.querySelectorAll(
+      optArticleSelector + customSelector
+    );
     let html = '';
     for (let article of articles) {
       /* get the article id */
@@ -96,7 +70,7 @@
         '"><span>' +
         articleTitle +
         '</span></a></li>';
-      console.log(linkHTML);
+      // console.log(linkHTML);
       /* insert link into titleList */
       html = html + linkHTML;
     }
@@ -139,4 +113,51 @@
   };
 
   generateTags();
+
+  const tagClickHandler = function (event) {
+    /* prevent default action for this event */
+    event.preventDefault();
+    /* make new constant named "clickedElement" and give it the value of "this" */
+    const clickedElement = this;
+    /* make a new constant "href" and read the attribute "href" of the clicked element */
+    const href = clickedElement.getAttribute('href');
+    console.log(href);
+    /* make a new constant "tag" and extract tag from the "href" constant */
+    const tag = href.replace('#tag-', '');
+    console.log(tag);
+    /* find all tag links with class active */
+    const activeLinks = document.querySelectorAll('a.active[href^="#tag-"]');
+    console.log(activeLinks);
+    /* START LOOP: for each active tag link */
+    for (let activeLink of activeLinks) {
+      /* remove class active */
+      activeLink.classList.remove('active');
+      /* END LOOP: for each active tag link */
+      console.log(activeLink);
+    }
+    /* find all tag links with "href" attribute equal to the "href" constant */
+    const allLinks = document.querySelectorAll('a[href="' + href + '"]');
+    console.log(allLinks);
+    /* START LOOP: for each found tag link */
+    for (let link of allLinks) {
+      /* add class active */
+      link.classList.add('active');
+      /* END LOOP: for each found tag link */
+    }
+    /* execute function "generateTitleLinks" with article selector as argument */
+    generateTitleLinks('[data-tags~="' + tag + '"]');
+  };
+
+  const addClickListenersToTags = function () {
+    /* find all links to tags */
+    const links = document.querySelectorAll('a[href^="#tag-"]');
+    /* START LOOP: for each link */
+    for (let link of links) {
+      /* add tagClickHandler as event listener for that link */
+      link.addEventListener('click', tagClickHandler);
+      /* END LOOP: for each link */
+    }
+  };
+
+  addClickListenersToTags();
 }
