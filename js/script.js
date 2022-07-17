@@ -64,13 +64,8 @@
       /* get the title from the title element */
       const articleTitle = article.querySelector(optTitleSelector).innerHTML;
       /* create HTML of the link */
-      const linkHTML =
-        '<li><a href="#' +
-        articleId +
-        '"><span>' +
-        articleTitle +
-        '</span></a></li>';
-      // console.log(linkHTML);
+      const linkHTML = `<li><a href="#${articleId}"><span>${articleTitle}</span></a></li>`;
+      console.log(linkHTML);
       /* insert link into titleList */
       html = html + linkHTML;
     }
@@ -103,7 +98,7 @@
         /* generate HTML of the link */
         const link = `<li><a href="#tag-${tag}">${tag}</a></li>`;
         /* add generated code to html variable */
-        html += `${link} `;
+        html += link;
         /* END LOOP: for each tag */
       }
       /* insert HTML of all the links into the tags wrapper */
@@ -136,7 +131,7 @@
       console.log(activeLink);
     }
     /* find all tag links with "href" attribute equal to the "href" constant */
-    const allLinks = document.querySelectorAll('a[href="' + href + '"]');
+    const allLinks = document.querySelectorAll(`a[href="${href}"]`);
     console.log(allLinks);
     /* START LOOP: for each found tag link */
     for (let link of allLinks) {
@@ -145,7 +140,7 @@
       /* END LOOP: for each found tag link */
     }
     /* execute function "generateTitleLinks" with article selector as argument */
-    generateTitleLinks('[data-tags~="' + tag + '"]');
+    generateTitleLinks(`[data-tags~="${tag}"]`);
   };
 
   const addClickListenersToTags = function () {
@@ -204,7 +199,7 @@
       console.log(activeLink);
     }
     /* find all author links with "href" attribute equal to the "href" constant */
-    const allLinks = document.querySelectorAll('a[href="' + href + '"]');
+    const allLinks = document.querySelectorAll(`a[href="${href}"]`);
     console.log(allLinks);
     /* START LOOP: for each found author link */
     for (let link of allLinks) {
@@ -213,7 +208,7 @@
       /* END LOOP: for each found author link */
     }
     /* execute function "generateTitleLinks" with article selector as argument */
-    generateTitleLinks('[data-author="' + author + '"]');
+    generateTitleLinks(`[data-author="${author}"]`);
   };
 
   const addClickListenersToAuthors = function () {
