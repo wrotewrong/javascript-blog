@@ -46,7 +46,10 @@
   const optArticleSelector = '.post',
     optTitleSelector = '.post-title',
     optTitleListSelector = '.titles',
-    optArticleTagsSelector = '.post-tags .list';
+    optArticleTagsSelector = '.post-tags .list',
+    optTagsListSelector = '.tags.list',
+    optCloudClassCount = 5,
+    optCloudClassPrefix = 'tag-size-';
 
   const generateTitleLinks = function (customSelector = '') {
     /* remove contents of titleList */
@@ -80,7 +83,43 @@
 
   generateTitleLinks();
 
+  // MY SOLUTION
+  // const calculateTagsParams = function (tags) {
+  //   const values = [];
+  //   for (let tag in tags) {
+  //     values.push(tags[tag]);
+  //   }
+  //   return {
+  //     max: Math.max(...values),
+  //     min: Math.min(...values),
+  //   };
+  // };
+
+  // KODILLA SOLUTION
+  const calculateTagsParams = function (tags) {
+    const params = { max: 0, min: 999999 };
+    for (let tag in tags) {
+      if (tags[tag] > params.max) {
+        params.max = tags[tag];
+      }
+      if (tags[tag] < params.min) {
+        params.min = tags[tag];
+      }
+    }
+    return params;
+  };
+
+  const calculateTagClass = function (count, params) {
+    const normalizedCount = count - params.min;
+    const normalizedMax = params.max - params.min;
+    const percentage = normalizedCount / normalizedMax;
+    const classNumber = Math.floor(percentage * (optCloudClassCount - 1) + 1);
+    return optCloudClassPrefix + classNumber;
+  };
+
   const generateTags = function () {
+    /* [NEW] create a new variable allTags with an empty object */
+    let allTags = {};
     /* find all articles */
     const articles = document.querySelectorAll(optArticleSelector);
     /* START LOOP: for every article: */
@@ -96,15 +135,44 @@
       /* START LOOP: for each tag */
       for (let tag of articleTagsArray) {
         /* generate HTML of the link */
-        const link = `<li><a href="#tag-${tag}">${tag}</a></li>`;
+        const linkHTML = `<li><a href="#tag-${tag}">${tag}</a></li>`;
         /* add generated code to html variable */
-        html += link;
+        html += linkHTML;
+        /* [NEW] check if this link is NOT already in allTags */
+        if (!allTags[tag]) {
+          /* [NEW] add tag to allTags object */
+          allTags[tag] = 1;
+        } else {
+          allTags[tag]++;
+        }
         /* END LOOP: for each tag */
       }
       /* insert HTML of all the links into the tags wrapper */
       wrapper.innerHTML = html;
       /* END LOOP: for every article: */
     }
+    /* [NEW] find list of tags in right column */
+    const tagList = document.querySelector(optTagsListSelector);
+
+    const tagsParams = calculateTagsParams(allTags);
+    console.log('tagsParams:', tagsParams);
+    /* [NEW] create variable for all links HTML code */
+    let allTagsHTML = '';
+
+    /* [NEW] START LOOP: for each tag in allTags: */
+    for (let tag in allTags) {
+      /* [NEW] generate code of a link and add it to allTagsHTML */
+      // allTagsHTML += tag + ' (' + allTags[tag] + ') ';
+      allTagsHTML += `<li><a class="${calculateTagClass(
+        allTags[tag],
+        tagsParams
+      )}" href="#tag-${tag}">${tag}</a><span></span></li>`;
+    }
+    /* [NEW] END LOOP: for each tag in allTags: */
+
+    /*[NEW] add HTML from allTagsHTML to tagList */
+    tagList.innerHTML = allTagsHTML;
+    console.log(allTags);
   };
 
   generateTags();
